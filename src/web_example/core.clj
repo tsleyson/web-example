@@ -1,18 +1,27 @@
 (ns web-example.core
+  "Contains handlers and routes"
   (:use compojure.core)
   (:require
+   [web-example.db :refer :all]
+   [web-example.web :refer :all]
    [ring.adapter.jetty :as jetty]
-   [net.cgrand.enlive-html :as enlive]
-   [clojure.java.io :refer [file]]
    [clojure.pprint :refer [pprint]]
    [compojure.route :as route]))
 
-(enlive/deftemplate page-template (file "resources/public/page.html")
-  [greeting]
-  [:h1] (enlive/content greeting))
+;; Handlers for static pages. note wrap-params is implicitly included
+;; by defroutes.
+
+(def new-post-form
+  (fn [req]
+    (let [auth_name (get-in req {:params "auth_name"})
+          post_text (get-in req {:params "post_text"})]
+      (if (and auth_name post_text)
+        (new-post auth_name post_text)
+        (throw (IllegalArgumentException. "No name or text provided."))))))
 
 (defroutes main-routes
-  (GET "/" [] (apply str (page-template "Hell world trapped there")))
+  (GET "/" [] (render-template front-page (get-posts db)))
+  #_(GET "")
   (route/resources "/")
   (route/not-found "404 not found"))
 

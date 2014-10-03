@@ -1,8 +1,18 @@
 body {
     font-family: "Arial", sans-serif;
+    background-color: #010aff;
+    background-image: url("images/strawberry&sunflower.png");
+}
+
+.post {
+    padding-left: 8px;
+    padding-top: 0px;
+    background-color: #dadada;
 }
 
 .container {
     width: 600px;
     margin: 0 auto;
+    background-color: #c9c9c9;
+    padding: 2px 2px 2px 2px;
 }
